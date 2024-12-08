@@ -1,5 +1,11 @@
 let humanScore = 0;
 let computerScore = 0;
+let actualRound = 0;
+
+function displayRound(){
+    let roundDisplay = document.querySelector(".round-display");
+    roundDisplay.textContent  = `Round: ${actualRound}`
+}
 
 
 function getComputerChoice(){
@@ -32,33 +38,30 @@ function getHumanChoice(){
 }
 
 function playRound(humanChoice,computerChoice){
+    actualRound  = actualRound + 1;
+    displayRound();
     let roundWinner = "";
-    console.log(`Player: ${humanChoice} || Computer: ${computerChoice}`);
+    let text = "";
+    text += `YOU choose  "${humanChoice}" and  CPU choose  "${computerChoice}". `;
     
     //Rock vs Paper
     if(humanChoice == "paper" && computerChoice == "rock"){
-        console.log("The winner is Player");
         roundWinner = "Player";
     }else if(humanChoice == "rock" && computerChoice == "paper"){
-        console.log("The winner is Computer");
         roundWinner = "Computer";
     }
     
     //Rock vs Scissors
     if(humanChoice == "rock" && computerChoice == "scissors"){
-        console.log("The winner is Player");
         roundWinner = "Player";
     }else if(humanChoice == "scissors" && computerChoice == "rock"){
-        console.log("The winner is Computer");
         roundWinner = "Computer";
     }
 
     //Paper vs Scissors
     if(humanChoice == "scissors" && computerChoice == "paper"){
-        console.log("The winner is Player");
         roundWinner = "Player";
     }else if(humanChoice == "paper" && computerChoice == "scissors"){
-        console.log("The winner is Computer");
         roundWinner = "Computer";
     }
     
@@ -68,20 +71,43 @@ function playRound(humanChoice,computerChoice){
     }else if(roundWinner === "Computer"){
         computerScore = computerScore + 1;
     }else{
-        console.log("TIE!!!");
+        roundWinner = "Nobody"
     }
 
     displayScore();
+    text += ` ${roundWinner} Won.`
+    let resultDisplay = document.querySelector(".round-result");
+    resultDisplay.textContent = text;
+    isGameOver();
     
 }
 
 function displayScore(){
-    console.log(`Player: ${humanScore} Computer: ${computerScore}`);
+    let scoreDisplay = document.querySelector(".score-display");
+    scoreDisplay.textContent = `Player: ${humanScore} Computer: ${computerScore}`;
+}
+
+function isGameOver(){
+    if (humanScore >= 5 || computerScore >= 5){
+        let finalWinner = humanScore >= 5 ? "Player"  : "CPU";
+
+        document.querySelector(".end-result").textContent = `It's the End of The Game... ${finalWinner} Won The Match`;
+        let allButtons = document.querySelectorAll(".btn");
+        allButtons.forEach((button)=>{
+            button.disabled = true;
+        })
+    }
 }
 
 
-for (let i = 0; i < 5; i++) {
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    playRound(humanSelection,computerSelection);    
-}
+
+let allButtons = document.querySelectorAll(".btn");
+
+allButtons.forEach((button)=>{
+    button.addEventListener("click",()=>{
+        let cpuChoice = getComputerChoice()
+        let playerChoice = (button.textContent).toLowerCase();
+        playRound(playerChoice,cpuChoice);
+    })
+})
+
